@@ -1,1 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
+// styles.scss
+
+// bootstrap update primary color
+$primary: #630090;
+@import "bootstrap/scss/bootstrap";
+
+// bootstrap-icons
+@import "bootstrap-icons/font/bootstrap-icons";
+
+// body {
+//     margin: 0;
+//     box-sizing: border-box;
+// }
+// angular + bootstrap
+.ng-invalid.ng-touched {
+    @extend .is-invalid;
+  }
+  
