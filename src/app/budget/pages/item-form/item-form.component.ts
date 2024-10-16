@@ -39,7 +39,10 @@ export class ItemFormComponent implements OnInit {
   ngOnInit() {
     console.log('id', this.id)
     if (this.id) {
-      this.itemService.get(this.id).subscribe(v => this.fg.patchValue(v))
+      this.itemService.get(this.id).subscribe(v => this.fg.patchValue({
+        ...v,
+        price: +v.price // Convert price to number
+      }))
     }
   }
 

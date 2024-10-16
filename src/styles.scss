@@ -2,18 +2,24 @@
 // styles.scss
 
 // bootstrap update primary color
-$primary: #630090;
+//$primary: #0e6005;
 @import "bootstrap/scss/bootstrap";
 
 // bootstrap-icons
 @import "bootstrap-icons/font/bootstrap-icons";
 
+.container-fluid {
+  padding-left: 0;
+  padding-right: 0;
+}
 // body {
-//     margin: 0;
-//     box-sizing: border-box;
+//   font-family: 'Noto Sans', sans-serif;
 // }
 // angular + bootstrap
 .ng-invalid.ng-touched {
     @extend .is-invalid;
   }
+
+  
+  
   
