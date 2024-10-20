@@ -24,7 +24,7 @@ export class ItemService {
   }
   
   add(item: CreateItem) {
-    return this.httpClient.post<Item>(this.URL, {...item , username: 'administrator'});
+    return this.httpClient.post<Item>(this.URL, item );
   }
   
   edit(id: number, item: EditIem) {
@@ -36,11 +36,11 @@ export class ItemService {
   }
   // TODO: temp update by front-end
   approve(id: number) {
-    return this.httpClient.patch<void>(`${this.URL}/${id}/${ItemStatus.APPROVED}`,'');
+    return this.httpClient.patch<Item>(`${this.URL}/${id}/${ItemStatus.APPROVED}`,'');
   }
 
   reject(id: number) {
-    return this.httpClient.patch<void>(`${this.URL}/${id}/${ItemStatus.REJECTED}`,'');
+    return this.httpClient.patch<Item>(`${this.URL}/${id}/${ItemStatus.REJECTED}`,'');
   }
   
 }

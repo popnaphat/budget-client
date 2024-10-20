@@ -4,6 +4,11 @@ import { JsonPipe, Location } from '@angular/common';
 import { thMobile } from '../../../shared/validators/th-mobile.validator';
 import { ItemService } from '../../item.service';
 import { ItemStatus } from '../../models/item';
+import { CanComponentDeactivate } from '../../../auth/guards/can-deactivate.guard';
+import { Observable } from 'rxjs';
+import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-item-form',
@@ -12,7 +17,7 @@ import { ItemStatus } from '../../models/item';
   templateUrl: './item-form.component.html',
   styleUrl: './item-form.component.scss'
 })
-export class ItemFormComponent implements OnInit {
+export class ItemFormComponent implements OnInit, CanComponentDeactivate {
 
   @Input()
   id: number | null = null;
@@ -21,6 +26,7 @@ export class ItemFormComponent implements OnInit {
   location = inject(Location);
   fb = inject(NonNullableFormBuilder)
   itemService = inject(ItemService)
+  router = inject(Router);
 
   // formControls
   title = this.fb.control<string>('', { validators: Validators.required });
@@ -35,7 +41,9 @@ export class ItemFormComponent implements OnInit {
     amount: this.amount,
     price: this.price
   })
-
+   // add 
+  modalService = inject(BsModalService)
+  bsModalRef?: BsModalRef;
   ngOnInit() {
     console.log('id', this.id)
     if (this.id) {
@@ -52,12 +60,45 @@ export class ItemFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const item = {...this.fg.getRawValue(), status: ItemStatus.PENDING };
-    console.log(item)
+    const item = { ...this.fg.getRawValue(), status: ItemStatus.PENDING };
+    console.log(item);
+    
     if (this.id) {
-      this.itemService.edit(this.id, item).subscribe(() => this.onBack());
+      this.itemService.edit(this.id, item).subscribe(() => {
+        this.fg.markAsPristine();  // fg.dirty is false after edit
+        this.router.navigate([`/budget/item-entry/`]);
+      });
     } else {
-      this.itemService.add(item).subscribe(() => this.onBack())
+      this.itemService.add(item).subscribe(() => {
+        this.fg.markAsPristine();  // fg.dirty is false after add
+        this.router.navigate([`/budget/item-entry/`]);
+      });
     }
+  }
+  
+  
+  canDeactivate(): boolean | Observable<boolean> {
+
+    // check is dirty-form
+    const isFormDirty = this.fg.dirty
+    console.log('isFormDirty', isFormDirty)
+    if (!isFormDirty) {
+      return true;
+    }
+
+    // init comfirm modal
+    const initialState: ModalOptions = {
+      initialState: {
+        title: `Confirm to leave" ?`
+      }
+    };
+    this.bsModalRef = this.modalService.show(ConfirmModalComponent, initialState);
+
+    return new Observable<boolean>((observer) => {
+      this.bsModalRef?.onHidden?.subscribe(() => {
+        observer.next(this.bsModalRef?.content?.confirmed);
+        observer.complete()
+      })  
+    })
   }
 }

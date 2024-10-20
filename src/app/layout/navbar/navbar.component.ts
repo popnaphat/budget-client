@@ -23,4 +23,9 @@ export class NavbarComponent {
   onLogout(): void {
     this.authService.logout();
   }
+
+  onKeycloakLogin() {
+    this.authService.getLoginOauth2RedirectUrl()
+      .subscribe((v) => window.location.replace(v.redirectUrl))
+  }
 }
