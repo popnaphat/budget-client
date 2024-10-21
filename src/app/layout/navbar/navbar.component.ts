@@ -26,6 +26,6 @@ export class NavbarComponent {
 
   onKeycloakLogin() {
     this.authService.getLoginOauth2RedirectUrl()
-      .subscribe((v) => window.location.replace(v.redirectUrl))
+      .subscribe((v) => window.location.replace(v.redirectUrl))  //ไปยังหน้า keycloak login
   }
 }

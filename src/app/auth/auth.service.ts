@@ -62,12 +62,13 @@ export class AuthService {
   }
 
   getLoginOauth2RedirectUrl() {
-    return this.httpClient.get<{ redirectUrl: string }>(
-      `${this.envConfig.apiUrl}/auth/login-oauth2-redirect-url`
+    return this.httpClient.get<{ redirectUrl: string }>(     //redirectUrl = url หน้า login 3rd party oAuth Keycloak
+      `${this.envConfig.apiUrl}/auth/login-oauth2-redirect-url`  
     );
   }
 
   loginOauth2(code: string) {
+    //console.log(code)
     return this.httpClient
       .post<any>(`${this.envConfig.apiUrl}/auth/login-oauth2`, { code })
       .pipe(tap((newToken) => this.setTokens(newToken)));

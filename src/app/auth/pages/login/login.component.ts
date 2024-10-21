@@ -14,8 +14,8 @@ import { AuthService } from '../../auth.service';
   styleUrl: './login.component.scss'
 })
 export  class LoginComponent implements OnInit {
-  @Input()
-  code = '';
+  @Input()   //listen keycloak response and assign in 'code' variable 
+  code = ''; //keycloak ส่ง accessToken, refreshToken แต่structureจะไม่เหมือนloginปกติ
   // router
   route = inject(ActivatedRoute);
   router = inject(Router);
